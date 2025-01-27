@@ -1,0 +1,34 @@
+{% extends 'master.html' %}{% load static %}{% block titleblock %}
+<title>{{title}} | Login</title>
+<link href="{% static 'main.css' %}" rel="stylesheet">
+{% endblock %}
+{% block headblock %}Login - {{title}}{%endblock%}
+{% block mainblock %}
+<div class="login">
+    <div class="text-primary text-center ">
+        <h3 class="text-dark"><b>Login</b></h3>
+    </div>
+    <form action="{% url 'login' %}" method="post">
+        {% csrf_token %}
+        {% if messages %}
+        {% for message in messages %}
+        {% if message.tags == 'error' %}
+        <div class="alert alert-danger" role="alert">
+            {{message}}
+        </div>
+        {% endif %}
+        {% endfor %}
+        {% endif %}
+        <div class="mb-3">
+            <label for="username" class="form-label">Username</label>
+            <input type="text" class="form-control" id="username" name="username" aria-describedby="emailHelp" required>
+            <div id="emailHelp" class="form-text">Never share your credential with anyone else.</div>
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" class="form-control" id="password" name="password" required>
+        </div>
+        <button type="submit" class="btn btn-outline-primary">Get Access</button>
+    </form>
+</div>
+{% endblock %}

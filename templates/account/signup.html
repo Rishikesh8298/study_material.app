@@ -1,0 +1,118 @@
+{% extends 'master.html' %}{% load static %}{% block titleblock %}
+<title>{{title}} | Sign Up</title>
+<link href="{% static 'main.css' %}" rel="stylesheet">
+{% endblock %}
+{% block headblock %}Sign Up - {{title}}{%endblock%}
+{% block mainblock %}
+<div class="signup bg-light text-dark">
+    <div class="text-primary text-center ">
+        <h3 class="text-dark"><b>Sign Up</b></h3>
+    </div>
+    <div>
+        <form action="{% url 'signup' %}" method="post">
+            {% csrf_token %} {% if messages %}
+            {% for message in messages %}
+            {% if message.tags == 'success' %}
+            <div class="alert alert-info" role="alert">
+                {{message}}
+            </div>
+            {% elif message.tags == 'error' %}
+            <div class="alert alert-danger" role="alert">
+                {{message}}
+            </div>
+            {% endif %}
+            {% endfor %}
+
+            {% endif %}
+            <div id="info" class="form-text"></div>
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" placeholder="Name" name="name" id="name"
+                       aria-label="Default" onfocus="onFocusUsername()" aria-describedby="info"
+                       required="required"/>
+            </div>
+
+            <div class="input-group mb-3">
+                <input type="email" name="email" id="email" class="form-control" placeholder="Email"
+                       aria-label="Default" aria-describedby="inputGroup-sizing-default" required="required"/>
+            </div>
+            <div id="message1" class="form-text"></div>
+            <div class="input-group mb-3">
+                <input type="password" name="password" id="password" class="form-control" placeholder="Password"
+                       aria-label="Default" aria-describedby="message1" onkeyup="isStrong()"
+                       required="required"/>
+            </div>
+            <div id="message2" class="form-text"></div>
+            <div class="input-group mb-3">
+                <input type="password" name="confirm_password" id="confirm_password" class="form-control"
+                       placeholder="Confirm Password" aria-label="Default" onkeyup="validate()"
+                       aria-describedby="message2" required="required"/>
+            </div>
+            <div class="input-group mb-3">
+                <button type="submit" class="btn btn-outline-primary">Create account</button>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+    function onFocusUsername() {
+        // This function display the information about username.
+        document.getElementById("info").innerHTML = "Usernames may contain alphanumeric, _, @, +, . and - characters.";
+        document.getElementById("info").style.color = "skyblue";
+    }
+    function isStrong() {
+        // This function check whether the password is strong or not.
+        let password = document.getElementById("password").value;
+        let alpha = 0;
+        let number = 0;
+        let s_alpha = 0;
+        document.getElementById("info").innerHTML=null;
+        if (password.length >= 8) {
+            for (let i = 0; i < password.length; i++) {
+                if (password[i] >= 'A' && password[i] <= 'Z') {
+                    alpha = 1;
+                }
+                if (password[i] >= '0' && password[i] <= '9') {
+                    number = 1;
+                }
+                if (password[i] >= 'a' && password[i] <= 'z') {
+                    s_alpha = 1;
+                }
+            }
+            if (alpha == 1 && number == 1 && s_alpha == 1 && password.length >= 8) {
+                document.getElementById("message1").innerHTML = "Password is Strong.";
+                document.getElementById("message1").style.color = 'green';
+            }
+        }
+        else if (password.length == 0) {
+            document.getElementById("message1").innerHTML = "Length of the password must be 8 or greater!!";
+            document.getElementById("message1").style.color = 'skyblue';
+        } else {
+            document.getElementById("message1").innerHTML = "Password is weak";
+            document.getElementById("message1").style.color = 'red';
+        }
+    }
+    function validate() {
+        // This function checks both password and confirm_password is same or not.
+        let password = document.getElementById("password").value;
+        let confirm_password = document.getElementById("confirm_password").value;
+        document.getElementById("info").innerHTML=null;
+        if (confirm_password == "") {
+            document.getElementById("message1").innerHTML = null;
+            document.getElementById("message2").innerHTML = "Confirm Password will not be empty!."
+            document.getElementById("message2").style.color = 'orange';
+            document.getElementById("signup").disabled = true;
+        }
+        else if (password === confirm_password) {
+            document.getElementById("message1").innerHTML = null;
+            document.getElementById("message2").innerHTML = "Password is matched."
+            document.getElementById("message2").style.color = 'green';
+            document.getElementById("signup").disabled = false;
+        } else {
+            document.getElementById("message1").innerHTML = null;
+            document.getElementById("message2").innerHTML = "Password is not matched."
+            document.getElementById("message2").style.color = 'red';
+            document.getElementById("signup").disabled = true;
+        }
+    }
+</script>
+{% endblock %}

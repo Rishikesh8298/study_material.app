@@ -1,0 +1,42 @@
+{% extends 'master.html' %}{% load static %}{% block titleblock %}
+<title>{{title}} | Edit-Topic</title>
+<script src="{% static 'ckeditor/ckeditor.js' %}"></script>
+{% endblock %}
+{% block headblock %} Edit Topic - {{topic.name}}{% endblock %}
+{% block mainblock %}
+    <div class="card">
+    <div class="card-body">
+        <form action="{% url 'edit_topic' topic_id=topic.id %}" method="post">
+            {% csrf_token %}
+            <div class="row g-3">
+                  <div class="col">
+                    <label for="name" class="form-label">Topic</label>
+                    <input type="text" class="form-control form-control-sm" id="name" name="name"  value="{{topic.name}}" placeholder="name" aria-label="date"
+                        required>
+                </div>
+                <div class="col">
+                    <label for="subject" class="form-label">Subject</label>
+                    <select id="subject" name="subject" class="form-control form-control-sm" required>
+                        <option value="{{topic.subject.id}}">{{topic.subject}}</option>
+                        {% for sub in subject %}
+                        <option value="{{sub.id}}">{{sub.name}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="description" class="form-label">Description</label>
+                <textarea class="form-control" id="description" name="description" rows="3" required>{{topic.description}}</textarea>
+                <script>
+                    CKEDITOR.replace("description", {
+                    height: 250,
+                    width: '100%'
+                    });
+                </script>
+            </div>
+            <hr>
+            <button type="submit" class="btn btn-secondary">Add</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

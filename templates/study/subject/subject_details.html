@@ -1,0 +1,37 @@
+{% extends 'master.html' %}{% load static %}
+{% block titleblock %}
+<title>{{ title }} | {{ subject.name }}</title>
+{% endblock %}
+{% block headblock %}{{ subject.name }}{% if request.user.is_authenticated %}
+{% if request.user.is_superuser %}
+| <a href="{% url 'edit_subject' subject_id=subject.id %}" class="btn btn-outline-success">Edit</a>
+{% endif %}
+{% endif %}
+{% endblock %}
+{% block mainblock %}
+<div class="container-fluid" style="height: 100vh;">
+    <div class="row" style="height: 100%;">
+        <!-- Left Sidebar for Topics -->
+        <div class="col-md-3" style="background-color: rgb(84, 156, 108); height: 100%; overflow-y: auto;">
+            <p class="p-1 m-1 text-light fw-bold">Content</p>
+            <hr/>
+            <ul class="list-unstyled">
+                {% for topic in topics %}
+                    <li>
+                        <a href="{% url 'topic_details' %}?topic={{topic.name}}" class="text-light">
+                            {{ topic.name }}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="col-md-9" style="height: 100%; overflow-y: auto;">
+            <p style="text-align: justify;">
+                {{ subject.description|safe }}
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

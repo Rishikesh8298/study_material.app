@@ -1,0 +1,22 @@
+{% extends 'master.html' %}{% load static %}
+{% block titleblock %}
+<title>{{ title }} | {{ topic.name }}</title>
+{% endblock %}
+{% block headblock %}{{ topic.name }}{% if request.user.is_authenticated %}
+{% if request.user.is_superuser %}
+| <a href="{% url 'edit_topic' topic_id=topic.id %}" class="btn btn-outline-success">Edit</a>
+{% endif %}
+{% endif %}
+{% endblock %}
+{% block mainblock %}
+<div class="container-fluid" style="height: 100vh;">
+    <div class="row" style="height: 100%;">
+        <!-- Main Content Area -->
+        <div  style="height: 100%; overflow-y: auto;">
+            <p style="text-align: justify;">
+                {{ topic.description|safe }}
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}
