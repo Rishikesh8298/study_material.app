@@ -12,11 +12,28 @@
 <div class="container-fluid" style="height: 100vh;">
     <div class="row" style="height: 100%;">
         <!-- Main Content Area -->
-        <div  style="height: 100%; overflow-y: auto;">
-            <p style="text-align: justify;">
+        <div class="col-md-9" style="height: 100%; overflow-y: auto;">
+            <p style="text-align: justify;" >
                 {{ topic.description|safe }}
             </p>
         </div>
+
+        <div class="col-md-3" style="background-color: rgb(84, 156, 108); height: 100%; overflow-y: auto;">
+            <p class="p-1 m-1 text-light fw-bold"> Related Content</p>
+            <hr/>
+            <ul class="list-unstyled">
+                {% for topic in related_topic %}
+                    <li>
+                        <a  href="{% url 'topic_details' %}?topic={{topic.name|urlencode}}" class="ms-3 text-light">
+                            <i class="fa fa-hand-o-right" aria-hidden="true"></i> {{ topic.name }}
+                        </a>
+                        <hr/>
+                    </li>
+
+                {% endfor %}
+            </ul>
+        </div>
+
     </div>
 </div>
 {% endblock %}

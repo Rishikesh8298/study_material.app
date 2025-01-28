@@ -6,7 +6,8 @@ from django.contrib import messages
 
 def home(request):
     subject_list = Subject.objects.all().order_by('name')
-    return render(request, "home.html", {"subject_list": subject_list})
+    recent_post = Topic.objects.all().order_by('-created_at', 'name')[:10]
+    return render(request, "home.html", {"subject_list": subject_list, "recent_post": recent_post})
 
 
 def add_subject(request):
@@ -34,6 +35,13 @@ def edit_subject(request, subject_id):
             return redirect("home")
     return render(request, "study/subject/edit_subject.html", {"subject": subject})
 
+def subject_details(request):
+    name = request.GET.get('subject')
+    subject = Subject.objects.get(name=name)
+    related_contents = Topic.objects.filter(subject=subject)
+    return render(request, "study/subject/subject_details.html", {"subject": subject, "related_contents": related_contents})
+
+
 
 def add_topic(request):
     if request.method == "POST":
@@ -57,14 +65,10 @@ def edit_topic(request, topic_id):
     return render(request, "study/topic/edit_topic.html", {"topic": topic, "subject": subject})
 
 
-def subject_details(request):
-    name = request.GET.get('subject')
-    subject = Subject.objects.get(name=name)
-    topics = Topic.objects.filter(subject=subject)
-    return render(request, "study/subject/subject_details.html", {"subject": subject, "topics": topics})
 
 
 def topic_details(request):
     name = request.GET.get('topic')
     topic = Topic.objects.get(name=name)
-    return render(request, "study/topic/topic_details.html", {"topic": topic})
+    related_topic = Topic.objects.filter(subject=topic.subject).exclude(name=topic.name)
+    return render(request, "study/topic/topic_details.html", {"topic": topic, "related_topic": related_topic})

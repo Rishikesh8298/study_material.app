@@ -3,11 +3,34 @@
 {% endblock %}
 {% block headblock %} Homepage{% endblock %}
 {% block mainblock %}
-<div class="lead p-3" style="height: 100vh;">
-    {% for subject in subject_list %}
-    <a href="{% url 'subject_details' %}?subject={{subject.name}}" class="btn btn-outline-success p-5 m-1">
-        {{subject.name}}
-    </a>
-    {% endfor %}
+<div class="container-fluid" style="height: 100vh;">
+    <div class="row" style="height: 100%;">
+        <!-- Main Content Area -->
+        <div class="col-md-9" style="height: 100%; overflow-y: auto;">
+            <div class="mt-1">
+                {% for subject in subject_list %}
+                    <a href="{% url 'subject_details' %}?subject={{subject.name|urlencode}}" class="btn btn-outline-success p-5 m-1">
+                        {{subject.name}}
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="col-md-3" style="background-color: rgb(84, 156, 108); height: 100%; overflow-y: auto;">
+            <p class="p-1 m-1 text-light fw-bold"> Recent Post</p>
+            <hr/>
+            <ul class="list-unstyled">
+                {% for topic in recent_post %}
+                    <li>
+                        <a  href="{% url 'topic_details' %}?topic={{topic.name|urlencode}}" class="ms-3 text-light">
+                            <i class="fa fa-hand-o-right" aria-hidden="true"></i> {{ topic.name|truncatewords:4}}
+                        </a>
+                        <hr/>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+    </div>
 </div>
 {% endblock %}

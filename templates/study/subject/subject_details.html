@@ -13,22 +13,24 @@
     <div class="row" style="height: 100%;">
         <!-- Left Sidebar for Topics -->
         <div class="col-md-3" style="background-color: rgb(84, 156, 108); height: 100%; overflow-y: auto;">
-            <p class="p-1 m-1 text-light fw-bold">Content</p>
+            <p class="p-1 m-1 text-light fw-bold"> Topic Content</p>
             <hr/>
             <ul class="list-unstyled">
-                {% for topic in topics %}
+                {% for topic in related_contents %}
                     <li>
-                        <a href="{% url 'topic_details' %}?topic={{topic.name}}" class="text-light">
-                            {{ topic.name }}
+                        <a href="{% url 'topic_details' %}?topic={{topic.name|urlencode}}" class="ms-3 text-light">
+                            <i class="fa fa-hand-o-right" aria-hidden="true"></i> {{ topic.name }}
                         </a>
+                        <hr/>
                     </li>
+
                 {% endfor %}
             </ul>
         </div>
 
         <!-- Main Content Area -->
         <div class="col-md-9" style="height: 100%; overflow-y: auto;">
-            <p style="text-align: justify;">
+            <p style="text-align: justify;" class="ms-1">
                 {{ subject.description|safe }}
             </p>
         </div>
