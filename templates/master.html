@@ -56,28 +56,29 @@
         </style>
 <!--        {% block ckblock %}{% endblock %}-->
     </head>
+
     <body>
         <header class="container blog-header py-3">
             <div class="row flex-nowrap justify-content-between align-items-center">
                 <div class="col-4 pt-1">
-                        {% if request.user.is_authenticated %}
-                            <a class="btn btn-sm btn-outline-secondary" href="">Holding</a>
-                        {% else %}
-                            <a class="btn btn-sm btn-outline-secondary" href="{% url 'signup' %}">Sign Up</a>
-                        {% endif %}
-                        </div>
+                    {% if request.user.is_authenticated %}
+                        <a class="btn btn-sm btn-outline-secondary" href="">Holding</a>
+                    {% else %}
+                        <a class="btn btn-sm btn-outline-secondary" href="{% url 'signup' %}">Sign Up</a>
+                    {% endif %}
+                </div>
                 <div class="col-4 text-center">
-                            <a class=" blog-header-logo text-dark" href="{% url 'home' %}">
-                                <img src="{% static 'img/favicon.png' %}" width="33" height="33" class="d-inline-block align-top"
+                    <a class=" blog-header-logo text-dark" href="{% url 'home' %}">
+                        <img src="{% static 'img/favicon.png' %}" width="33" height="33" class="d-inline-block align-top"
                                     alt="">
-                                {{title}}
-                            </a>
-                        </div>
+                        {{title}}
+                    </a>
+                </div>
 
                 <div class=" col-4 d-flex justify-content-end align-items-center">
                     {% if request.user.is_authenticated %}
                         {% if request.user.is_superuser %}
-                            <a class="btn btn-sm btn-outline-secondary" target="_blank" href="admin/">Admin</a>
+                            <a class="btn btn-sm btn-outline-secondary" target="_blank" href="/admin/">Admin</a>
                         {% endif %}
                             <a class="btn btn-sm btn-outline-secondary" href="{% url 'logout' %}">Logout</a>
                     {% else %}
@@ -100,13 +101,31 @@
                 <a class="nav-link text-light" href=""><u>Link-3</u></a>
             </li>
         </ul>
+
         <main class="container-fluid" style="background-color:whitesmoke;">
             <div class="container shadow">
-                <div class="text-center fw-semibold h3">
-                    {% block headblock %}{% endblock %}
+                <div class="fw-semibold h3">
+                    <div class="d-flex justify-content-between">
+                        <div class="d-inline-block">
+                            {% block headblock %}{% endblock %}
+                        </div>
+                        <div class="d-inline-block">
+                                <form method="GET" class="d-inline-block" action="{% url 'apply_filter' %}">
+                                    <div class="row g-3">
+                                    <div class="col-auto">
+                                        <input type="text" class="form-control" name="key" value="{{ request.GET.key }}"
+                                               placeholder="Search a keyword..." required>
+                                    </div>
+                                    <div class="col-auto">
+                                        <input type="submit" value="Filter" class="btn btn-outline-secondary">
+                                    </div>
+                                </div>
+                                </form>
+                            </div>
+                        </div>
                 </div>
                 <hr class="mb-0"/>
-                <div style="background-color:white;">
+                <div style="background-color:white;" >
                     {% block mainblock %}{% endblock %}
                 </div>
             </div>

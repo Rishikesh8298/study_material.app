@@ -1,0 +1,61 @@
+{% extends 'master.html' %}{% load static %}
+{% block titleblock %}
+<title>{{ title }} | Home</title>
+{% endblock %}
+{% block headblock %} Filter-Topics{% endblock %}
+{% block mainblock %}
+<div class="container-fluid" style="height: 100vh;">
+    <div class="row" style="height: 100%;">
+        <!-- Main Content Area -->
+        <div class="col-md-9" style="height: 100%; overflow-y: auto;">
+            <div class="mt-1">
+                {% for data in result %}
+                <div class="card mb-1">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ data.name }}</h5>
+                        <p class="card-text">{{ data.description|safe|truncatewords:20 }}</p>
+                        <a href="{% url 'topic_details' %}?topic={{ data.name|urlencode }}" class="btn btn-sm btn-outline-success">Read More ...</a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Pagination -->
+            <div class="col-md-12 p-2 mt-2 mb-1 text-light text-center">
+                {% if result.has_previous %}
+                <a href="?page={{ result.previous_page_number }}&key={{ request.GET.key }}" class="btn btn-light btn-sm">&laquo;</a>
+                {% endif %}
+
+                {% for i in result.paginator.page_range %}
+                {% if result.number == i %}
+                <a href="#" class="btn btn-outline-success btn-sm disabled">{{ i }}</a>
+                {% elif i > result.number|add:'-3' and i < result.number|add:'3' %}
+                <a href="?page={{ i }}&key={{ request.GET.key }}" class="btn btn-light btn-sm">{{ i }}</a>
+                {% endif %}
+                {% endfor %}
+
+                {% if result.has_next %}
+                <a href="?page={{ result.next_page_number }}&key={{ request.GET.key }}" class="btn btn-light btn-sm">&raquo;</a>
+                {% endif %}
+            </div>
+            <!-- Pagination Ended -->
+        </div>
+
+        <!-- Recent Posts -->
+        <div class="col-md-3" style="background-color: rgb(84, 156, 108); height: 100%; overflow-y: auto;">
+            <p class="p-1 m-1 text-light fw-bold"> Recent Post</p>
+            <hr/>
+            <ul class="list-unstyled">
+                {% for topic in recent_post %}
+                <li>
+                    <a href="{% url 'topic_details' %}?topic={{ topic.name|urlencode }}" class="ms-3 text-light">
+                        <i class="fa fa-hand-o-right" aria-hidden="true"></i> {{ topic.name|truncatewords:4 }}
+                    </a>
+                    <hr/>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

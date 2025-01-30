@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect
 from .models import Topic, Subject
 from .forms import TopicForm, SubjectForm
 from django.contrib import messages
+from django.db.models import Q
+from mymodule.pagination import create_pagination
 
 
 def home(request):
@@ -35,12 +37,13 @@ def edit_subject(request, subject_id):
             return redirect("home")
     return render(request, "study/subject/edit_subject.html", {"subject": subject})
 
+
 def subject_details(request):
     name = request.GET.get('subject')
     subject = Subject.objects.get(name=name)
     related_contents = Topic.objects.filter(subject=subject)
-    return render(request, "study/subject/subject_details.html", {"subject": subject, "related_contents": related_contents})
-
+    return render(request, "study/subject/subject_details.html",
+                  {"subject": subject, "related_contents": related_contents})
 
 
 def add_topic(request):
@@ -65,10 +68,36 @@ def edit_topic(request, topic_id):
     return render(request, "study/topic/edit_topic.html", {"topic": topic, "subject": subject})
 
 
-
-
 def topic_details(request):
     name = request.GET.get('topic')
     topic = Topic.objects.get(name=name)
     related_topic = Topic.objects.filter(subject=topic.subject).exclude(name=topic.name)
     return render(request, "study/topic/topic_details.html", {"topic": topic, "related_topic": related_topic})
+
+
+def apply_filter(request):
+    result = Topic.objects.all()
+    keyword = request.GET.get("key")
+    if keyword:
+        result = result.filter(
+            Q(name__icontains=keyword) |
+            Q(description__icontains=keyword)
+        )
+    recent_post = Topic.objects.all().order_by('-created_at', 'name')[:10]
+    page = request.GET.get("page")
+    result = create_pagination(main=result, no=10, page=page)
+    if result:
+        return render(
+            request,
+            "study/apply_filter.html",
+            {
+                "result": result,
+                "recent_post": recent_post,
+            },
+        )
+    else:
+        messages.error(request, "No result found matching the keyword!!")
+        return render(
+            request,
+            "error.html",
+        )

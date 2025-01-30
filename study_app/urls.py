@@ -9,4 +9,5 @@ urlpatterns=  [
     path("edit-topic/<uuid:topic_id>/", edit_topic, name="edit_topic"),
     path("subject-details/", subject_details, name="subject_details"),
     path("topic-details/", topic_details, name="topic_details"),
+    path("apply-filter/", apply_filter, name="apply_filter"),
 ]
