@@ -72,7 +72,7 @@ class SubjectDetailView(DetailView):
     def get_context_data(self, **kwargs):
         """Add related topics to the context."""
         context = super().get_context_data(**kwargs)
-        context["related_contents"] = Topic.objects.filter(subject=self.object)
+        context["related_contents"] = Topic.objects.filter(subject=self.object).order_by("name")
         return context
 
 
@@ -144,7 +144,7 @@ class TopicDetailView(DetailView):
         """Add related topics to the context."""
         context = super().get_context_data(**kwargs)
         topic = self.get_object()
-        context["related_topic"] = Topic.objects.filter(subject=topic.subject).exclude(name=topic.name)
+        context["related_topic"] = Topic.objects.filter(subject=topic.subject).exclude(name=topic.name).order_by("name")
         return context
 
 
